@@ -1,0 +1,22 @@
+drop table cart cascade constraints;
+--장바구니 테이블
+create table cart (
+cart_id number not null primary key,
+userid varchar2(50) not null,
+product_id number not null,
+amount number default 0
+);
+
+--foreign key 설정
+--create 생성, alter 변경, drop 제거
+--add constraint 제약조건 이름
+--foreign key(필드명) references 테이블(필드명)
+alter table cart add constraint cart_userid_fk
+foreign key(userid) references member(userid);
+alter table cart add constraint cart_productid_fk
+foreign key(product_id) references product(product_id);
+
+commit;
+
+--제약조건 삭제
+alter table cart drop constraint cart_productid_fk;

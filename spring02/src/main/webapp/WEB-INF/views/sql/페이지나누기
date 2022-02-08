@@ -1,0 +1,38 @@
+-- 우선 아래 각 테이블의 데이터를 지운다.
+delete from attach;
+delete from board;
+
+--페이지 나누기 테스트를 위해 레코드 입력
+declare --선언부
+    i number := 1;
+begin --실행부
+    while i<=991 loop
+        insert into board (bno,title,content,writer)
+        values
+        ( (select nvl(max(bno)+1,1) from board)
+        ,'제목'||i, '내용'||i, 'kim');
+        i := i+1; --조건 변경
+    end loop;
+end;
+/
+
+select * from board;
+
+--레코드 갯수 확인
+select count(*) from board;
+
+commit;
+
+-- from => where => select => order by 절 순서로 실행됨
+-- rownum : 레코드의 출력 순번
+select *
+from (
+    select rownum as rn, A.*
+    from (
+        select bno,title,writer,name,regdate,viewcnt
+        from board b, member m
+        where b.writer=m.userid
+        order by bno desc 
+    ) A    
+) where rn between 1 and 10;
+
